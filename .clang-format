@@ -1,0 +1,54 @@
+BasedOnStyle: LLVM
+
+# ----- Layout -----
+IndentWidth: 4
+ContinuationIndentWidth: 8
+UseTab: Never
+ColumnLimit: 80
+
+# ----- Brace Style -----
+BreakBeforeBraces: Allman   # Braces always on new line
+InsertBraces: true          # Always insert braces, even for single statements
+
+# ----- Control Statements -----
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+
+# ----- Indentation -----
+IndentCaseLabels: true 
+IndentGotoLabels: false
+
+# ----- Includes -----
+SortIncludes: true
+IncludeBlocks: Preserve
+IncludeCategories:
+  - Regex: '^".*\.h"$'
+    Priority: 0
+  - Regex: '^<.*\.h>$'
+    Priority: 1
+  - Regex: '.*'
+    Priority: 2
+
+# ----- Whitespace & formatting -----
+InsertNewlineAtEOF: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeInheritanceColon: false
+
+# ----- Macro handling -----
+ForEachMacros:
+  - 'FOR_EACH'
+  - 'LIST_FOR_EACH'
+  - 'SYS_FOR_EACH'
+
+IfMacros:
+  - 'CHECKIF'
+
+WhitespaceSensitiveMacros:
+  - 'STRINGIFY'
+  - 'COND_CODE_0'
+  - 'COND_CODE_1'
+

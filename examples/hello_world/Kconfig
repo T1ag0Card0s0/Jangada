@@ -1,0 +1,10 @@
+menu "Hello World Configuration"
+
+config HELLO_WORLD_MESSAGE 
+    string "Message to print"
+    default "Hello World"
+    help
+        Message to be displayed. 
+
+
+endmenu

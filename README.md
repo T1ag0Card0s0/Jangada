@@ -24,15 +24,3 @@ Confirm with:
 which menuconfig
 which genconfig
 ```
-
-# Configuration
-
-Configure the CMake project:
-
-```bash
-cmake -S . -B build
-```
-
-Run the menuconfig interface:
-
-

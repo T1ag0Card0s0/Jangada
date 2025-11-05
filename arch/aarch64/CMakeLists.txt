@@ -1,0 +1,5 @@
+set(ARCH_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/startup.S
+    PARENT_SCOPE
+)
+

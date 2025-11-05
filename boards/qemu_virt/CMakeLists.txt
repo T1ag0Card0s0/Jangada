@@ -1,0 +1,5 @@
+set(BOARD_LINKER_SCRIPT
+    ${CMAKE_CURRENT_SOURCE_DIR}/linker.ld
+    PARENT_SCOPE
+)
+

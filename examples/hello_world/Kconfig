@@ -6,5 +6,4 @@ config HELLO_WORLD_MESSAGE
     help
         Message to be displayed. 
 
-
 endmenu

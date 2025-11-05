@@ -1,0 +1,10 @@
+menu "Example apps"
+
+config HELLO_WORLD
+    bool "Configure Hello World app"
+
+if HELLO_WORLD 
+    source "examples/hello_world/Kconfig"
+endif
+
+endmenu

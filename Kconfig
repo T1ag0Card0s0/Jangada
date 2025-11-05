@@ -1,3 +1,10 @@
 menu "RTOS Project Configuration"
 
+config EXAMPLE
+    bool "Configure Example"
 
+if EXAMPLE
+source "examples/Kconfig"
+endif
+
+endmenu

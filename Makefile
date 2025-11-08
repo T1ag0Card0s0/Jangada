@@ -4,7 +4,7 @@ endif
 
 CONFIG_FILE ?= $(PROJECT_DIR)/.config
 
-NOCONFIG_TARGETS := menuconfig help
+NOCONFIG_TARGETS := menuconfig help format format-check tidy check
 ifeq ($(filter $(NOCONFIG_TARGETS),$(MAKECMDGOALS)),)
   ifeq ($(wildcard $(CONFIG_FILE)),)
     $(error "$(CONFIG_FILE) not found! Please run 'make menuconfig' first.")
@@ -31,7 +31,9 @@ ALL_OBJS := $(OBJS)
 CLEAN_FILES := $(TARGET) $(OBJS)
 DIST_CLEAN_FILES := $(OBJS)
 
+
 rwildcard=$(foreach d,$(wildcard $(addsuffix *,$(1))),$(call rwildcard,$(d)/,$(2))$(filter $(subst *,%,$(2)),$(d)))
+FORMAT_SRCS := $(call rwildcard,$(DIRS),*.c) $(call rwildcard,$(DIRS),*.cpp) $(call rwildcard,$(DIRS),*.h)
 
 default: show-info all
 
@@ -72,6 +74,31 @@ show-info:
 menuconfig:
 	MENUCONFIG_STYLE=aquatic menuconfig Kconfig
 	@mv .config $(PROJECT_DIR)
+
+.PHONY: format format-check tidy check
+format:
+	@echo "Running clang-format on sources..."
+	@for src in $(FORMAT_SRCS); do \
+		[ -f $$src ] && clang-format -i $$src && echo "Formatted $$src"; \
+	done
+	@echo "clang-format done."
+
+format-check:
+	@echo "Checking formatting..."
+	@for src in $(FORMAT_SRCS); do \
+		[ -f $$src ] && clang-format --dry-run --Werror $$src && echo "Checked $$src"; \
+	done
+	@echo "clang-format check complete."
+
+tidy:
+	@echo "Running clang-tidy on sources..."
+	@for src in $(FORMAT_SRCS); do \
+		[ -f $$src ] && clang-tidy $$src -- -I$(PROJECT_DIR) $(CFLAGS) $(CXXFLAGS) && echo "Checked $$src"; \
+	done
+	@echo "clang-tidy done."
+
+check: format-check tidy
+	@echo "All code style and static analysis checks passed."
 
 export BUILD_DIR
 export LINKER_SCRIPT

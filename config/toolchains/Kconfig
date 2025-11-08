@@ -1,0 +1,7 @@
+config TOOLCHAIN_FILE
+    string
+    default "config/toolchains/aarch64-none-elf.mk" if BOARD_QEMU_VIRT_AARCH64
+    default "config/toolchains/native-gcc"        if BOARD_QEMU_I686
+    default "config/toolchains/xtensa-esp32-elf"  if BOARD_ESP32_S3
+    default "config/toolchains/aarch64-linux-gnu" if BOARD_RASPBERRYPI_4B
+

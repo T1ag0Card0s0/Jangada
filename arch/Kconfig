@@ -1,0 +1,6 @@
+config ARCH
+    string
+    default "aarch64" if BOARD_QEMU_VIRT_AARCH64
+    default "i686"   if BOARD_QEMU_I686
+    default "xtensa" if BOARD_ESP32_S3
+    default "aarch64" if BOARD_RASPBERRYPI_4B

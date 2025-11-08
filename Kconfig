@@ -1,10 +1,5 @@
-menu "RTOS Project Configuration"
+source "arch/Kconfig"
+source "config/toolchains/Kconfig"
+source "boards/Kconfig"
 
-config EXAMPLE
-    bool "Configure Example"
-
-if EXAMPLE
-source "examples/Kconfig"
-endif
-
-endmenu
+source "$(PROJECT_DIR)/Kconfig"

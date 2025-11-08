@@ -2,4 +2,6 @@ source "arch/Kconfig"
 source "config/toolchains/Kconfig"
 source "boards/Kconfig"
 
-source "$(PROJECT_DIR)/Kconfig"
+if $(PROJECT_DIR) != ""
+    source "$(PROJECT_DIR)/Kconfig"
+endif

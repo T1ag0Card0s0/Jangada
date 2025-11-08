@@ -1,0 +1,34 @@
+
+choice
+    prompt "Select Target Board"
+    default BOARD_QEMU_VIRT_AARCH64
+
+config BOARD_QEMU_VIRT_AARCH64
+    bool "QEMU virt aarch64 cortex-a53"
+    help
+      Runs the RTOS on aarch64 QEMU virtual machine.
+
+config BOARD_QEMU_I686
+    bool "QEMU i686 PC"
+    help
+      Runs the RTOS on x86 i686 QEMU virtual machine.
+
+config BOARD_ESP32_S3
+    bool "ESP32-S3 DevKit"
+    help
+      Runs the RTOS on the ESP32-S3 microcontroller.
+
+config BOARD_RASPBERRYPI_4B
+    bool "Raspberry Pi 4B"
+    help
+      Runs the RTOS on Raspberry Pi 4 Model B.
+
+endchoice
+
+config LINKER_SCRIPT 
+    string
+    default "boards/qemu_virt/linker.ld"   if BOARD_QEMU_VIRT_AARCH64
+    default "qemu_i686"   if BOARD_QEMU_I686
+    default "esp32_s3"    if BOARD_ESP32_S3
+    default "raspberrypi_4b" if BOARD_RASPBERRYPI_4B
+

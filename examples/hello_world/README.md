@@ -1,7 +1,12 @@
-To build 
+First configure:
+
 ```bash
- cmake -B build -DBOARD=qemu_virt -DARCH=aarch64 --toolchain ../..
-/cmake/toolchain/aarch64-none-elf.cmake
+make menuconfig  -C ../.. PROJECT_DIR=$(pwd)
+```
+
+Compile:
+```bash
+make -C ../.. PROJECT_DIR=$(pwd)
 ```
 
 To run
@@ -12,6 +17,6 @@ qemu-system-aarch64 \
     -cpu cortex-a53 \
     -m 128M \
     -nographic \
-    -kernel build/hello_world.elf
+    -kernel hello_world
 ```
 

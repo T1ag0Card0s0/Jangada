@@ -24,3 +24,24 @@ Confirm with:
 which menuconfig
 which genconfig
 ```
+
+Test:
+
+```bash
+# Do some configurations
+
+make menuconfig PROJECT_DIR=$(HOME)/Projects/Jangada-RTOS/examples/hello_world
+
+# Compile
+make PROJECT_DIR=$(HOME)/Projects/Jangada-RTOS/examples/hello_world 
+
+# Run
+
+qemu-system-aarch64 \
+    -machine virt \
+    -cpu cortex-a53 \
+    -m 128M \
+    -nographic \
+    -kernel examples/hello_world/hello_world
+```
+

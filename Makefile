@@ -68,8 +68,7 @@ show-info:
 
 .PHONY: menuconfig 
 menuconfig:
-	MENUCONFIG_STYLE=aquatic menuconfig Kconfig
-	@mv .config $(PROJECT_DIR)
+	MENUCONFIG_STYLE=aquatic menuconfig $(RTOS_PATH)/Kconfig
 
 .PHONY: format format-check tidy check
 format:

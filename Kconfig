@@ -1,6 +1,8 @@
-source "arch/Kconfig"
-source "config/toolchains/Kconfig"
-source "boards/Kconfig"
+if $(RTOS_PATH) != ""
+    source "$(RTOS_PATH)/arch/Kconfig"
+    source "$(RTOS_PATH)/config/toolchains/Kconfig"
+    source "$(RTOS_PATH)/boards/Kconfig"
+endif
 
 if $(PROJECT_DIR) != ""
     source "$(PROJECT_DIR)/Kconfig"

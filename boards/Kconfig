@@ -27,7 +27,7 @@ endchoice
 
 config LINKER_SCRIPT 
     string
-    default "boards/qemu_virt/linker.ld"   if BOARD_QEMU_VIRT_AARCH64
+    default "$(RTOS_PATH)/boards/qemu_virt/linker.ld"   if BOARD_QEMU_VIRT_AARCH64
     default "qemu_i686"   if BOARD_QEMU_I686
     default "esp32_s3"    if BOARD_ESP32_S3
     default "raspberrypi_4b" if BOARD_RASPBERRYPI_4B

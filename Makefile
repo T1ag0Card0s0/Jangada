@@ -25,7 +25,7 @@ BUILD_DIR ?= $(PROJECT_DIR)/build
 TARGET ?= $(PROJECT_DIR)/$(notdir $(PROJECT_DIR)) 
 
 OBJS := 
-DIRS := $(RTOS_PATH)/arch/$(ARCH) $(PROJECT_DIR)
+DIRS := $(RTOS_PATH)/arch/$(ARCH) $(DIRS)
 
 ALL_OBJS := $(OBJS)
 CLEAN_FILES := $(TARGET) $(OBJS)
@@ -50,11 +50,6 @@ all: $(TARGET)
 clean: clean-subdirs
 	@echo CLEAN $(CLEAN_FILES)
 	@rm -f $(CLEAN_FILES)
-
-.PHONY: distclean
-distclean: clean-subdirs
-	@echo CLEAN $(DIST_CLEAN_FILES)
-	@rm -f $(DIST_CLEAN_FILES)
 	@rm -rf $(BUILD_DIR)
 
 .PHONY: find-all-objs
@@ -69,6 +64,7 @@ show-info:
 	@echo Architecture: $(ARCH)
 	@echo Build directory: $(BUILD_DIR)
 	@echo Final binary file: $(TARGET)
+	@echo RTOS path: $(RTOS_PATH)
 
 .PHONY: menuconfig 
 menuconfig:
@@ -105,6 +101,7 @@ export LINKER_SCRIPT
 export TOOLCHAIN_FILE
 export PROJECT_DIR
 export RTOS_PATH
+export CONFIG_FILE
 export MAKE_INCLUDE=$(RTOS_PATH)/config/make.mk
 export SUB_MAKE_INCLUDE=$(RTOS_PATH)/config/submake.mk
 

@@ -1,12 +1,12 @@
 First configure:
 
 ```bash
-make menuconfig  -C ../.. PROJECT_DIR=$(pwd)
+make menuconfig
 ```
 
 Compile:
 ```bash
-make -C ../.. PROJECT_DIR=$(pwd)
+make
 ```
 
 To run

@@ -30,10 +30,10 @@ Test:
 ```bash
 # Do some configurations
 
-make menuconfig PROJECT_DIR=$HOME/Projects/Jangada-RTOS/examples/hello_world
+make menuconfig -C examples/hello_world 
 
 # Compile
-make PROJECT_DIR=$HOME/Projects/Jangada-RTOS/examples/hello_world 
+make -C examples/hello_world 
 
 # Run
 

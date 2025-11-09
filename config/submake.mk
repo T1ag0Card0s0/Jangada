@@ -3,7 +3,6 @@ ifeq ($(SUBDIR),$(CURDIR))
     SUBDIR := $(patsubst $(PROJECT_DIR)/%,%,$(CURDIR))
 endif
 
-# Remove only the initial / if it exists.
 SUBDIR := $(if $(filter /%,$(SUBDIR)),$(subst /,,$(wordlist 2,$(words $(SUBDIR)),$(subst /, ,$(SUBDIR)))),$(SUBDIR))
 OBJS_WITH_PATH := $(addprefix $(BUILD_DIR)/$(SUBDIR)/,$(OBJS))
 

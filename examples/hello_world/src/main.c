@@ -81,7 +81,8 @@ extern char _stack_top_; // from linker script
 int main(void)
 {
     uart_init();
-    uart_puts("Hello from Jangada RTOS on AArch64!\n");
+    uart_puts(HELLO_WORLD_MESSAGE);
+    uart_puts("\n");
     uart_puts("Stack top @ ");
     uart_print_hex64((uint64_t)&_stack_top_);
     uart_puts("\n");

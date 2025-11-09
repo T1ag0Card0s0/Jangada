@@ -7,7 +7,7 @@ LD     := $(PREFIX)ld
 STRIP  := $(PREFIX)strip
 AS     := $(CC)
 
-CFLAGS   := -Wall -O2 -ffreestanding -nostdlib -nostartfiles -fno-builtin
-CXXFLAGS := -Wall -O2 -std=c++17 -ffreestanding -nostdlib -nostartfiles -fno-builtin
+CFLAGS   := $(CFLAGS) -Wall -O2 -ffreestanding -nostdlib -nostartfiles -fno-builtin
+CXXFLAGS := $(CXXFLAGS) -Wall -O2 -std=c++17 -ffreestanding -nostdlib -nostartfiles -fno-builtin
 
 LDFLAGS  := -nostdlib -nostartfiles -ffreestanding

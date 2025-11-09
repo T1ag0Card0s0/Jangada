@@ -1,4 +1,7 @@
-OBJS := main.c.o
-DIRS :=
+RTOS_MAKEFILE := ../../Makefile
 
-include $(SUB_MAKE_INCLUDE)
+PROJECT_DIR := $(CURDIR)
+
+DIRS := $(PROJECT_DIR)/src
+
+include $(RTOS_MAKEFILE) 

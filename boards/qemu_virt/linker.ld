@@ -1,31 +1,50 @@
+
 /* link.ld - aarch64 bare-metal for QEMU 'virt' */
-/* QEMU 'virt' default RAM base */
+
+/* ===================== */
+/* Configurable Settings */
+/* ===================== */
+RAM_ORIGIN      = 0x40000000;  /* Default QEMU RAM base */
+RAM_SIZE        = 128M;         /* Default RAM size */
+STACK_SIZE      = 64K;          /* Stack size at top of RAM */
+VECTOR_ALIGN    = 2048;         /* Exception vector alignment */
+PAGE_ALIGN      = 4096;         /* Page alignment for code/data */
+INIT_FINI_ALIGN = 8;            /* Alignment for init/fini arrays */
+BSS_ALIGN       = 16;           /* Alignment for BSS */
+
+/* ================== */
+/* Memory Declaration */
+/* ================== */
 MEMORY
 {
-    RAM (rwx) : ORIGIN = 0x40000000, LENGTH = 128M
+    RAM (rwx) : ORIGIN = RAM_ORIGIN, LENGTH = RAM_SIZE
 }
 
-/* Entry symbol */
+/* Entry point */
 ENTRY(_start)
 
-/* Expose useful symbols */
+/* Useful global symbols */
 _ram_origin_ = ORIGIN(RAM);
-_ram_end_ = ORIGIN(RAM) + LENGTH(RAM);
+_ram_end_    = ORIGIN(RAM) + LENGTH(RAM);
 
 SECTIONS
 {
-    /* Exception vector table: must be 2KB aligned for VBAR_EL1 */
+    /* --------------------------- */
+    /* Exception vector table      */
+    /* --------------------------- */
     . = ORIGIN(RAM);
-    . = ALIGN(2048);
+    . = ALIGN(VECTOR_ALIGN);
     __vectors_start = .;
-    .vectors : ALIGN(2048)
+    .vectors : ALIGN(VECTOR_ALIGN)
     {
         KEEP(*(.vectors))
     } > RAM
     __vectors_end = .;
 
-    /* Put code right after vectors, page-align for neatness */
-    . = ALIGN(4096);
+    /* --------------------------- */
+    /* Code section (.text)        */
+    /* --------------------------- */
+    . = ALIGN(PAGE_ALIGN);
     __text_start = .;
     .text :
     {
@@ -36,8 +55,10 @@ SECTIONS
     } > RAM
     __text_end = .;
 
-    /* Read-only data */
-    . = ALIGN(4096);
+    /* --------------------------- */
+    /* Read-only data (.rodata)    */
+    /* --------------------------- */
+    . = ALIGN(PAGE_ALIGN);
     __rodata_start = .;
     .rodata :
     {
@@ -47,8 +68,10 @@ SECTIONS
     } > RAM
     __rodata_end = .;
 
+    /* --------------------------- */
     /* C++ constructors/destructors */
-    . = ALIGN(8);
+    /* --------------------------- */
+    . = ALIGN(INIT_FINI_ALIGN);
     __init_array_start = .;
     .init_array :
     {
@@ -57,7 +80,7 @@ SECTIONS
     } > RAM
     __init_array_end = .;
 
-    . = ALIGN(8);
+    . = ALIGN(INIT_FINI_ALIGN);
     __fini_array_start = .;
     .fini_array :
     {
@@ -66,8 +89,10 @@ SECTIONS
     } > RAM
     __fini_array_end = .;
 
-    /* Writable data */
-    . = ALIGN(4096);
+    /* --------------------------- */
+    /* Writable data (.data)       */
+    /* --------------------------- */
+    . = ALIGN(PAGE_ALIGN);
     __data_start = .;
     .data :
     {
@@ -77,8 +102,10 @@ SECTIONS
     } > RAM
     __data_end = .;
 
-    /* Zero-initialized data (won't be in the image) */
-    . = ALIGN(16);
+    /* --------------------------- */
+    /* Zero-initialized data (.bss) */
+    /* --------------------------- */
+    . = ALIGN(BSS_ALIGN);
     _bss_start_ = .;
     .bss (NOLOAD) :
     {
@@ -88,22 +115,29 @@ SECTIONS
     } > RAM
     _bss_end_ = .;
 
-    /* Optional: a simple stack near top of RAM (adjust size as needed) */
-    . = ALIGN(16);
+    /* --------------------------- */
+    /* Heap (optional)             */
+    /* --------------------------- */
+    . = ALIGN(BSS_ALIGN);
     _heap_start_ = .;
 
-    /* Define stack at the top of RAM. Startup can set SP = _stack_top_. */
-    _stack_size_ = 64K;
-    _stack_top_  = ORIGIN(RAM) + LENGTH(RAM);
+    /* --------------------------- */
+    /* Stack at top of RAM          */
+    /* --------------------------- */
+    _stack_size_   = STACK_SIZE;
+    _stack_top_    = ORIGIN(RAM) + LENGTH(RAM);
     _stack_bottom_ = _stack_top_ - _stack_size_;
 
-    /* Sanity: keep image well below stack bottom */
+    /* Ensure stack does not overlap image */
     ASSERT(_bss_end_ < _stack_bottom_, "Image overlaps stack!")
 
-    /* Provide symbols that many runtime stubs expect */
+    /* Provide standard symbols */
     PROVIDE(_end_ = _bss_end_);
     PROVIDE(end = _bss_end_);
 }
 
-/* Extra safety: make sure vectors are 2KB-aligned */
-ASSERT((__vectors_start & 0x7FF) == 0, "VBAR_EL1 must be 2KB aligned");
+/* --------------------------- */
+/* Sanity checks               */
+/* --------------------------- */
+ASSERT((__vectors_start & (VECTOR_ALIGN - 1)) == 0, "VBAR_EL1 must be 2KB aligned");
+

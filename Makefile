@@ -16,16 +16,16 @@ RTOS_PATH := $(patsubst %/,%,$(dir $(mkfile_path)))
 
 ifneq ($(wildcard $(CONFIG_FILE)),)
 include $(CONFIG_FILE)
-TOOLCHAIN_FILE := $(RTOS_PATH)/$(subst ",,$(CONFIG_TOOLCHAIN_FILE))
-LINKER_SCRIPT := $(RTOS_PATH)/$(subst ",,$(CONFIG_LINKER_SCRIPT))
-ARCH := $(subst ",,$(CONFIG_ARCH))
+TOOLCHAIN_FILE ?= $(subst ",,$(CONFIG_TOOLCHAIN_FILE))
+LINKER_SCRIPT ?= $(subst ",,$(CONFIG_LINKER_SCRIPT))
+ARCH ?= $(subst ",,$(CONFIG_ARCH))
 endif
 
 BUILD_DIR ?= $(PROJECT_DIR)/build
 TARGET ?= $(PROJECT_DIR)/$(notdir $(PROJECT_DIR)) 
 
 OBJS := 
-DIRS := $(RTOS_PATH)/arch/$(ARCH) $(DIRS)
+DIRS := $(ARCH) $(DIRS)
 
 ALL_OBJS := $(OBJS)
 CLEAN_FILES := $(TARGET) $(OBJS)
@@ -44,6 +44,7 @@ $(TARGET): build-subdirs $(OBJS) find-all-objs
 
 .PHONY: all
 all: $(TARGET)
+	@echo -ne "\n\n"
 	@echo Target $(TARGET) build finished.
 
 .PHONY: clean
@@ -51,20 +52,27 @@ clean: clean-subdirs
 	@echo CLEAN $(CLEAN_FILES)
 	@rm -f $(CLEAN_FILES)
 	@rm -rf $(BUILD_DIR)
+	@rm -rf $(TARGET)
 
 .PHONY: find-all-objs
 find-all-objs:
 	$(eval ALL_OBJS := $(sort $(call rwildcard,$(BUILD_DIR)/,*.o)))
 
-.PHONY: show-info
 show-info:
 	@echo Building $(notdir $(PROJECT_DIR))
-	@echo Toolchain file: $(TOOLCHAIN_FILE)
-	@echo Linker script: $(LINKER_SCRIPT)
-	@echo Architecture: $(ARCH)
-	@echo Build directory: $(BUILD_DIR)
-	@echo Final binary file: $(TARGET)
-	@echo RTOS path: $(RTOS_PATH)
+	@echo Toolchain Makefile \(TOOLCHAIN_FILE\): $(TOOLCHAIN_FILE)
+	@echo Linker script \(LINKER_SCRIPT\): $(LINKER_SCRIPT)
+	@echo Folder with architecture specifics \(ARCH\): $(ARCH)
+	@echo Final build directory \(BUILD_DIR\): $(BUILD_DIR)
+	@echo Final binary \(TARGET\): $(TARGET)
+	@echo RTOS Makefile path \(RTOS_PATH\): $(RTOS_PATH)
+	@echo C compiler \(CC\): $(CC)
+	@echo C++ compiler \(CXX\): $(CXX)
+	@echo Assembler \(AS\): $(AS)
+	@echo Archive tool \(AR\): $(AR)
+	@echo Linker \(LD\): $(LD)
+	@echo Strip tool \(STRIP\): $(STRIP)
+	@echo -ne "\n\n"
 
 .PHONY: menuconfig 
 menuconfig:

@@ -1,8 +1,0 @@
-include $(CONFIG_FILE)
-
-OBJS := main.c.o
-DIRS :=
-
-CFLAGS := -DHELLO_WORLD_MESSAGE=\"$(CONFIG_HELLO_WORLD_MESSAGE)\" $(CFLAGS)
-
-include $(SUB_MAKE_INCLUDE)

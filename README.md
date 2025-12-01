@@ -5,43 +5,37 @@
 **Jangada RTOS** is a lightweight, modular, and efficient Real-Time Operating System designed for embedded systems that need reliability without the overhead.  
 Inspired by the simplicity and resilience of a *jangada* - this RTOS is built to keep your systems afloat in the unpredictable seas of real-time constraints.
 
-# Setup
+## Features
 
-To configure the project you will need to have:
+* Preemptive priority-based scheduler
+* Tasks, queues, semaphores, and mutexes
+* Software timers
+* Low interrupt latency
+* Configurable memory model
+* Portable architecture layer for supporting multiple CPUs
 
- - menuconfig, an interactive TUI menu to configure options.
- - genconfig, to generate the config.h and .config file from the Kconfig
+## Getting Started
 
-To install it execute the following command:
-
-```bash
-pip install kconfiglib
-```
-
-Confirm with:
+### Building
 
 ```bash
-which menuconfig
-which genconfig
+
 ```
 
-Test:
+### Running Examples
 
-```bash
-# Do some configurations
+See the `docs/examples/` folder for sample projects.
 
-make menuconfig -C examples/hello_world 
+## Documentation
 
-# Compile
-make -C examples/hello_world 
+Full documentation is available in the [`docs/`](docs/) directory.
 
-# Run
+Key pages:
 
-qemu-system-aarch64 \
-    -machine virt \
-    -cpu cortex-a53 \
-    -m 128M \
-    -nographic \
-    -kernel examples/hello_world/hello_world
-```
+* [Overview](Jangada-Docs/overview.md)
+* [Architecture](Jangada-Docs/architecture.md)
+* [Examples](Jangada-Demo/README.md)
 
+## License
+
+MIT (or your chosen license)

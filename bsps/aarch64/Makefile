@@ -1,5 +1,5 @@
-BSPS_SRCS := aarch64/common/startup.S
-BSPS_OBJS := $(BSPS_SRCS:%=$(BSPS_BUILD_DIR)/%.o)
+SRCS := aarch64/common/startup.S
+BSPS_OBJS := $(SRCS:%=$(BSPS_BUILD_DIR)/%.o)
 
 all: $(BSPS_OBJS)
 

@@ -10,7 +10,7 @@ $(BUILD_DIR)/%.S.o: $(RTOS_PATH)/%.S
 
 format:
 	@echo "Running clang-format on sources..."
-	@for src in $(RTOS_SRCS); do \
+	@for src in $(SRCS); do \
 		if [ -f $$src ]; then \
 			clang-format -i -style=file $$src && echo "Formatted $$src"; \
 		fi; \

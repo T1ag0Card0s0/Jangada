@@ -25,6 +25,8 @@ install: install-dirs
 
 clean: clean-dirs
 
+format: format-dirs
+
 build-dirs:
 	for dir in $(RTOS_DIRS); do \
 		$(MAKE) -C $$dir all; \
@@ -40,4 +42,9 @@ install-dirs:
 		$(MAKE) -C $$dir install; \
 	done
 
-.PHONY: all clean test
+format-dirs:
+	for dir in $(RTOS_DIRS); do \
+		$(MAKE) -C $$dir format; \
+	done
+
+.PHONY: all clean test format

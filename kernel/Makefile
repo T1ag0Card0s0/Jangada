@@ -1,5 +1,5 @@
-KERNEL_SRCS := src/queue.c
-KERNEL_OBJS := $(KERNEL_SRCS:%=$(KERNEL_BUILD_DIR)/%.o)
+SRCS := src/queue.c
+KERNEL_OBJS := $(SRCS:%=$(KERNEL_BUILD_DIR)/%.o)
 KERNEL_INCLUDE_DIR := kernel/include
 
 all: $(KERNEL_OBJS) 

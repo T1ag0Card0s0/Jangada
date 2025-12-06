@@ -2,6 +2,8 @@ mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 RTOS_PATH = $(patsubst %/,%,$(dir $(mkfile_path)))
 include $(RTOS_PATH)/make/helpers.mk
 
+BUILD_DIR ?= $(CURDIR)/build
+
 REQUIRED_VARS := BUILD_DIR ARCH BOARD TRIPLET
 $(call check-required-vars,$(REQUIRED_VARS))
 

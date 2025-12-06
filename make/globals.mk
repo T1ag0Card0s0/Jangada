@@ -1,0 +1,12 @@
+export CC
+export AS
+export CXX
+export LD
+export AR
+export KERNEL_BUILD_DIR
+export LIBC_BUILD_DIR
+export BSPS_BUILD_DIR
+export RTOS_PATH
+export BUILD_DIR
+export ARCH
+export BOARD

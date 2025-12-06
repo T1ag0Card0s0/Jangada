@@ -23,7 +23,7 @@ ALL_OBJS = $(shell find $(BUILD_DIR) -type f -name '*.o')
 ALL_ARCHIVES = $(shell find $(BUILD_DIR) -type f -name '*.a')
 
 TARGET := $(BUILD_DIR)/hello_world.elf
-LINKER_SCRIPT := $(BUILD_DIR)/Jangada-RTOS/linker_sript/linker.ld
+LINKER_SCRIPT := $(BUILD_DIR)/bsps/aarch64/qemu_virt/linker.ld
 
 RUN_aarch64_qemu_virt := qemu-system-aarch64 -machine virt -cpu cortex-a53 -m 128M -nographic -kernel $(TARGET)
 
@@ -34,13 +34,7 @@ $(TARGET): Jangada-RTOS tinylibc $(OBJS)
 	$(CC) $(ALL_OBJS) $(ALL_ARCHIVES) $(LDFLAGS) -T $(LINKER_SCRIPT) -o $@
 
 Jangada-RTOS:
-	$(MAKE) -C ../../Jangada-RTOS/ all \
-		BUILD_DIR=$(BUILD_DIR) \
-		TRIPLET=$(TRIPLET) \
-		ARCH=$(ARCH) BOARD=$(BOARD)
- 
- tinylibc:
-	$(MAKE) -C ../../Jangada-LibC/ all \
+	$(MAKE) -C ../../ all \
 		BUILD_DIR=$(BUILD_DIR) \
 		TRIPLET=$(TRIPLET) \
 		ARCH=$(ARCH) BOARD=$(BOARD)

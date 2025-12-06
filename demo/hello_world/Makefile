@@ -3,7 +3,7 @@ MAKEFLAGS += -s
 
 BUILD_DIR := $(CURDIR)/build
 
-TRIPLET := /opt/aarch64-none-elf/bin/aarch64-none-elf-
+TRIPLET := aarch64-none-elf-
 CC := $(TRIPLET)gcc
 AS := $(TRIPLET)as
 CXX := $(TRIPLET)g++
@@ -29,11 +29,11 @@ RUN_aarch64_qemu_virt := qemu-system-aarch64 -machine virt -cpu cortex-a53 -m 12
 
 all: $(TARGET)
 
-$(TARGET): Jangada-RTOS tinylibc $(OBJS)
+$(TARGET): Jangada $(OBJS)
 	@echo [LD] $(subst $(BUILD_DIR)/,,$@)
 	$(CC) $(ALL_OBJS) $(ALL_ARCHIVES) $(LDFLAGS) -T $(LINKER_SCRIPT) -o $@
 
-Jangada-RTOS:
+Jangada:
 	$(MAKE) -C ../../ all \
 		BUILD_DIR=$(BUILD_DIR) \
 		TRIPLET=$(TRIPLET) \
@@ -54,5 +54,5 @@ clean:
 run: all
 	@$(RUN_$(ARCH)_$(BOARD))
 
-.PHONY: all clean Jangada-RTOS tinylibc run
+.PHONY: all clean Jangada run
 -include $(DEPS)

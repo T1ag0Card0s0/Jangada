@@ -1,7 +1,7 @@
 SRCS := string/memcpy.c
 OBJS := $(SRCS:%=$(LIBC_BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
-TARGET := $(LIBC_BUILD_DIR)/tinylibc.a
+TARGET := $(LIBC_BUILD_DIR)/libc.a
 
 INCLUDES := -I$(RTOS_PATH)/libc/include
 CFLAGS := -MMD -MP $(INCLUDES)

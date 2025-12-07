@@ -10,3 +10,4 @@ export RTOS_PATH
 export BUILD_DIR
 export ARCH
 export BOARD
+export PREFIX

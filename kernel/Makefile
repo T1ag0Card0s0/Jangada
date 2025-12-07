@@ -1,16 +1,27 @@
 SRCS := src/queue.c
-KERNEL_OBJS := $(SRCS:%=$(KERNEL_BUILD_DIR)/%.o)
+OBJS := $(SRCS:%=$(KERNEL_BUILD_DIR)/%.o)
+DEPS := $(OBJS:.o=.d)
+TARGET := $(KERNEL_BUILD_DIR)/libjangada.a
+
 KERNEL_INCLUDE_DIR := kernel/include
 
-all: $(KERNEL_OBJS) 
+INCLUDES := -I$(RTOS_PATH)/kernel/include
+CFLAGS := -MMD -MP $(INCLUDES)
 
-install: all
-	mkdir -p $(KERNEL_BUILD_DIR)/include
-	cp -r $(RTOS_PATH)/$(KERNEL_INCLUDE_DIR) $(KERNEL_BUILD_DIR)
+all: $(TARGET)
+
+install:
+	cp -r $(RTOS_PATH)/$(KERNEL_INCLUDE_DIR)/* $(PREFIX)/usr/include/kernel
+	cp -r $(TARGET) $(PREFIX)/usr/lib
+
+$(TARGET): $(OBJS)
+	mkdir -p $(dir $@)
+	@echo [AR] $(subst $(BUILD_DIR)/,,$@)
+	$(AR) rcs $@ $^
 
 clean:
-	rm -f $(KERNEL_OBJS)
+	rm -f $(OBJS)
 
 include $(RTOS_PATH)/make/rules.mk
 
-.PHONY: all clean format
+-include $(DEPS)

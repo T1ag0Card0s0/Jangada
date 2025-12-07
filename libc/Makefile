@@ -9,8 +9,8 @@ CFLAGS := -MMD -MP $(INCLUDES)
 all: $(TARGET)
 
 install: all
-	mkdir -p $(LIBC_BUILD_DIR)/include
-	cp -r $(RTOS_PATH)/libc/include/* $(LIBC_BUILD_DIR)/include/
+	cp $(TARGET) $(PREFIX)/usr/lib
+	cp -r $(RTOS_PATH)/libc/include/* $(PREFIX)/usr/include/
 
 $(TARGET): $(OBJS)
 	mkdir -p $(dir $@)

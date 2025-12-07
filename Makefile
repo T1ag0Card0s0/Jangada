@@ -3,6 +3,7 @@ RTOS_PATH = $(patsubst %/,%,$(dir $(mkfile_path)))
 include $(RTOS_PATH)/make/helpers.mk
 
 BUILD_DIR ?= $(CURDIR)/build
+PREFIX ?= $(BUILD_DIR)/sysroot
 
 REQUIRED_VARS := BUILD_DIR ARCH BOARD TRIPLET
 $(call check-required-vars,$(REQUIRED_VARS))
@@ -19,13 +20,16 @@ RTOS_INCLUDE_DIR := $(RTOS_PATH)/kernel/include \
 
 all: build-dirs install
 
+sysroot:
+	mkdir -p $(PREFIX)/{usr/{lib,include/{kernel,sys}},boot}
+
 install: install-dirs
 
 clean: clean-dirs
 
 format: format-dirs
 
-build-dirs:
+build-dirs: sysroot
 	for dir in $(RTOS_DIRS); do \
 		$(MAKE) -C $$dir all; \
 	done

@@ -1,0 +1,32 @@
+# Jangada project structure
+```
+/bsps
+    /aarch64
+        /common
+        /qemu_virt
+        ...
+    ...
+    /include
+    Makefile
+/demo
+    /hello_world
+        Makefile
+    ...
+/docs
+/kernel
+    /include
+    /portable
+    /src
+    Makefile
+/libc
+    /include
+    /string
+    /stdio
+    ...
+    Makefile
+/make
+    globals.mk
+    helpers.mk
+    rules.mk
+Makefile
+```

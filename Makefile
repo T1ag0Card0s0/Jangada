@@ -4,6 +4,7 @@ include $(RTOS_PATH)/make/helpers.mk
 
 BUILD_DIR ?= $(CURDIR)/build
 PREFIX ?= $(BUILD_DIR)/sysroot
+RTOS_BUILD_DIR = $(BUILD_DIR)/jangada
 
 REQUIRED_VARS := BUILD_DIR ARCH BOARD TRIPLET
 $(call check-required-vars,$(REQUIRED_VARS))
@@ -11,7 +12,6 @@ $(call check-required-vars,$(REQUIRED_VARS))
 include $(RTOS_PATH)/make/globals.mk
 
 RTOS_DIRS = $(RTOS_PATH)/bsps/$(ARCH) \
-			$(RTOS_PATH)/bsps/$(ARCH)/$(BOARD) \
 			$(RTOS_PATH)/libc \
 			$(RTOS_PATH)/kernel
 
@@ -21,7 +21,7 @@ RTOS_INCLUDE_DIR := $(RTOS_PATH)/kernel/include \
 all: build-dirs install
 
 sysroot:
-	mkdir -p $(PREFIX)/{usr/{lib,include/{kernel,sys}},boot}
+	mkdir -p $(PREFIX)/usr/{lib,include/{kernel,sys,bsp}}
 
 install: install-dirs
 

@@ -1,7 +1,8 @@
+LIBC_RTOS_BUILD_DIR = $(RTOS_BUILD_DIR)/libc
 SRCS := string/memcpy.c
-OBJS := $(SRCS:%=$(LIBC_BUILD_DIR)/%.o)
+OBJS := $(SRCS:%=$(LIBC_RTOS_BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
-TARGET := $(LIBC_BUILD_DIR)/libc.a
+TARGET := $(LIBC_RTOS_BUILD_DIR)/libc.a
 
 INCLUDES := -I$(RTOS_PATH)/libc/include
 CFLAGS := -MMD -MP $(INCLUDES)
@@ -14,7 +15,7 @@ install: all
 
 $(TARGET): $(OBJS)
 	mkdir -p $(dir $@)
-	@echo [AR] $(subst $(BUILD_DIR)/,,$@)
+	@echo [AR] $(subst $(RTOS_BUILD_DIR)/,,$@)
 	$(AR) rcs $@ $^
 
 clean:

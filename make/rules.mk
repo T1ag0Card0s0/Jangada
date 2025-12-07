@@ -1,11 +1,11 @@
-$(BUILD_DIR)/%.c.o: $(RTOS_PATH)/%.c 
+$(RTOS_BUILD_DIR)/%.c.o: $(RTOS_PATH)/%.c 
 	mkdir -p $(dir $@)
-	@echo [CC] $(subst $(BUILD_DIR)/,,$@)
+	@echo [CC] $(subst $(RTOS_BUILD_DIR)/,,$@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%.S.o: $(RTOS_PATH)/%.S 
+$(RTOS_BUILD_DIR)/%.S.o: $(RTOS_PATH)/%.S 
 	mkdir -p $(dir $@)
-	@echo [AS] $(subst $(BUILD_DIR)/,,$@)
+	@echo [AS] $(subst $(RTOS_BUILD_DIR)/,,$@)
 	$(AS) $(ASFLAGS) -c $< -o $@
 
 format:

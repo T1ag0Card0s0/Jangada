@@ -12,18 +12,17 @@ AR := $(TRIPLET)ar
 ARCH := aarch64
 BOARD := qemu_virt
 
-CFLAGS := $(CFLAGS) -Wall -Os -ffreestanding -nostdlib -nostartfiles -fno-builtin -ffunction-sections -fdata-sections -MMD -MP 
-LDFLAGS := -nostdlib -nostartfiles -ffreestanding -Wl,--gc-sections
+CFLAGS := --sysroot=$(BUILD_DIR)/sysroot -Wall -Os -ffreestanding -nostdlib -nostartfiles -fno-builtin -ffunction-sections -fdata-sections -MMD -MP 
+LDFLAGS := --sysroot=$(BUILD_DIR)/sysroot -nostdlib -nostartfiles -ffreestanding -Wl,--gc-sections
 
 SRCS := src/main.c
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
-ALL_OBJS = $(shell find $(BUILD_DIR) -type f -name '*.o')
-ALL_ARCHIVES = $(shell find $(BUILD_DIR) -type f -name '*.a')
+ALL_ARCHIVES = -lc -ljangada -lbsp
+LINKER_SCRIPT := $(BUILD_DIR)/jangada/bsps/aarch64/qemu_virt/linker.ld
 
 TARGET := $(BUILD_DIR)/hello_world.elf
-LINKER_SCRIPT := $(BUILD_DIR)/bsps/aarch64/qemu_virt/linker.ld
 
 RUN_aarch64_qemu_virt := qemu-system-aarch64 -machine virt -cpu cortex-a53 -m 128M -nographic -kernel $(TARGET)
 
@@ -31,7 +30,7 @@ all: $(TARGET)
 
 $(TARGET): Jangada $(OBJS)
 	@echo [LD] $(subst $(BUILD_DIR)/,,$@)
-	$(CC) $(ALL_OBJS) $(ALL_ARCHIVES) $(LDFLAGS) -T $(LINKER_SCRIPT) -o $@
+	$(CC) $(OBJS) $(ALL_ARCHIVES) $(LDFLAGS) -T $(LINKER_SCRIPT) -o $@
 
 Jangada:
 	$(MAKE) -C ../../ all \

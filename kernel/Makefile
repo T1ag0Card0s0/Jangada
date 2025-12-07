@@ -1,7 +1,8 @@
+KERNEL_RTOS_BUILD_DIR = $(RTOS_BUILD_DIR)/kernel
 SRCS := src/queue.c
-OBJS := $(SRCS:%=$(KERNEL_BUILD_DIR)/%.o)
+OBJS := $(SRCS:%=$(KERNEL_RTOS_BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
-TARGET := $(KERNEL_BUILD_DIR)/libjangada.a
+TARGET := $(KERNEL_RTOS_BUILD_DIR)/libjangada.a
 
 KERNEL_INCLUDE_DIR := kernel/include
 
@@ -16,7 +17,7 @@ install:
 
 $(TARGET): $(OBJS)
 	mkdir -p $(dir $@)
-	@echo [AR] $(subst $(BUILD_DIR)/,,$@)
+	@echo [AR] $(subst $(RTOS_BUILD_DIR)/,,$@)
 	$(AR) rcs $@ $^
 
 clean:

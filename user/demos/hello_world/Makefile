@@ -1,7 +1,10 @@
 MAKEFLAGS += --no-print-directory
 MAKEFLAGS += -s
 
-BUILD_DIR := $(CURDIR)/build
+BUILD_DIR ?= $(CURDIR)/build
+
+REQUIRED_VARS := BUILD_DIR SYSROOT_DIR
+$(call check-required-vars,$(REQUIRED_VARS))
 
 TRIPLET := aarch64-none-elf-
 CC := $(TRIPLET)gcc
@@ -12,8 +15,8 @@ AR := $(TRIPLET)ar
 ARCH := aarch64
 BOARD := qemu_virt
 
-CFLAGS := --sysroot=$(BUILD_DIR)/sysroot -Wall -Os -ffreestanding -nostdlib -nostartfiles -fno-builtin -ffunction-sections -fdata-sections -MMD -MP 
-LDFLAGS := --sysroot=$(BUILD_DIR)/sysroot -nostdlib -nostartfiles -ffreestanding -Wl,--gc-sections
+CFLAGS := --sysroot=$(SYSROOT_DIR) -Wall -Os -ffreestanding -nostdlib -nostartfiles -fno-builtin -ffunction-sections -fdata-sections -MMD -MP 
+LDFLAGS := --sysroot=$(SYSROOT_DIR) -nostdlib -nostartfiles -ffreestanding -Wl,--gc-sections
 LDFLAGS += -lc -ljangada -lbsp
 
 SRCS := src/main.c

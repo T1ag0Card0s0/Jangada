@@ -13,7 +13,7 @@ Key pages:
 
 * [Overview](docs/overview.md)
 * [Architecture](docs/architecture.md)
-* [Examples](demo/README.md)
+* [Application Examples](user/demos/README.md)
 
 ## License
 

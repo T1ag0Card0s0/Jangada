@@ -7,13 +7,13 @@ Inspired by the simplicity and resilience of a *jangada* - this RTOS is built to
 
 ## Documentation
 
-Full documentation is available in the [`Jangada-Docs/`](Jangada-Docs/) directory.
+Full documentation is available in the [`docs/`](docs/) directory.
 
 Key pages:
 
-* [Overview](Jangada-Docs/overview.md)
-* [Architecture](Jangada-Docs/architecture.md)
-* [Examples](Jangada-Demo/README.md)
+* [Overview](docs/overview.md)
+* [Architecture](docs/architecture.md)
+* [Examples](demo/README.md)
 
 ## License
 

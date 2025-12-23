@@ -1,0 +1,43 @@
+MAKEFLAGS += --no-print-directory
+MAKEFLAGS += -s
+
+# compile flags
+OBJCFLAGS := $(CFLAGS) -c
+OBJCXXFLAGS := $(CXXFLAGS) -c
+
+# recursive make and clean
+.PHONY: build-subdirs
+build-subdirs: $(DIRS)
+
+.PHONY: $(DIRS)
+$(DIRS):
+	@$(MAKE) -C $@ all
+	
+.PHONY: clean-subdirs
+clean-subdirs:
+	@for dir in $(DIRS); do \
+		$(MAKE) -C $$dir clean; \
+	done
+
+.PHONY: install-subdirs install
+install-subdirs:
+	@for dir in $(DIRS); do \
+	    if [ -f "$$dir/Makefile" ]; then \
+	        $(MAKE) -C $$dir install || true; \
+	    fi; \
+	done
+
+$(BUILD_DIR)/%.c.o: $(PROJECT_PATH)/%.c
+	@mkdir -p $(dir $@)
+	@echo -e "\t" CC $(OBJCFLAGS) $(patsubst $(PROJECT_PATH)/%,%,$<) -o $(patsubst $(BUILD_DIR)/%,%,$@)
+	@$(CC) $(OBJCFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.cpp.o: $(PROJECT_PATH)/%.cpp
+	@mkdir -p $(dir $@)
+	@echo -e "\t" CXX $(OBJCXXFLAGS) $(patsubst $(PROJECT_PATH)/%,%,$<) -o $(patsubst $(BUILD_DIR)/%,%,$@)
+	@$(CXX) $(OBJCXXFLAGS) $< -o $@
+
+$(BUILD_DIR)/%.S.o: $(PROJECT_PATH)/%.S
+	@mkdir -p $(dir $@)
+	@echo -e "\t" AS $(ASFLAGS) $(patsubst $(PROJECT_PATH)/%,%,$<) -o $(patsubst $(BUILD_DIR)/%,%,$@)
+	@$(AS) $(ASFLAGS) -c $< -o $@

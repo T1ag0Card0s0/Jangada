@@ -1,4 +1,4 @@
-SRCS := task.c
-DIRS := 
+SRCS := startup.S
+DIRS :=
 
 include $(SUB_MAKE_INCLUDE)

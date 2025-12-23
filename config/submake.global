@@ -1,0 +1,14 @@
+RELATIVE_DIR := $(patsubst $(PROJECT_PATH)/%,%,$(CURDIR))
+
+SRCS_WITH_PATH := $(SRCS:%=$(RELATIVE_DIR)/%)
+OBJS := $(SRCS_WITH_PATH:%=$(BUILD_DIR)/%.o)
+
+all: $(OBJS) build-subdirs
+
+clean: clean-subdirs
+	@echo CLEAN $(OBJS)
+	@rm -f $(OBJS)
+
+.PHONY: all clean
+
+include $(MAKE_INCLUDE)

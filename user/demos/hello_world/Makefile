@@ -2,28 +2,25 @@ MAKEFLAGS += --no-print-directory
 MAKEFLAGS += -s
 
 BUILD_DIR ?= $(CURDIR)/build
+SYSROOT_DIR ?= $(BUILD_DIR)/sysroot
 
 REQUIRED_VARS := BUILD_DIR SYSROOT_DIR
 $(call check-required-vars,$(REQUIRED_VARS))
 
 TRIPLET := aarch64-none-elf-
 CC := $(TRIPLET)gcc
-AS := $(TRIPLET)as
-CXX := $(TRIPLET)g++
-LD := $(TRIPLET)ld
-AR := $(TRIPLET)ar
 ARCH := aarch64
 BOARD := qemu_virt
 
 CFLAGS := --sysroot=$(SYSROOT_DIR) -Wall -Os -ffreestanding -nostdlib -nostartfiles -fno-builtin -ffunction-sections -fdata-sections -MMD -MP 
 LDFLAGS := --sysroot=$(SYSROOT_DIR) -nostdlib -nostartfiles -ffreestanding -Wl,--gc-sections
-LDFLAGS += -lc -ljangada -lbsp
+LDFLAGS += -lc -ljangada -larch
 
 SRCS := src/main.c
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
-LINKER_SCRIPT := $(BUILD_DIR)/jangada/bsps/aarch64/qemu_virt/linker.ld
+LINKER_SCRIPT := linker.ld
 
 TARGET := $(BUILD_DIR)/hello_world.elf
 
@@ -37,7 +34,7 @@ $(TARGET): Jangada $(OBJS)
 	$(CC) $(OBJS) $(LDFLAGS) -T $(LINKER_SCRIPT) -o $@
 
 Jangada:
-	$(MAKE) -C ../../ all \
+	$(MAKE) -C ../../../ all \
 		BUILD_DIR=$(BUILD_DIR) \
 		TRIPLET=$(TRIPLET) \
 		ARCH=$(ARCH) BOARD=$(BOARD)

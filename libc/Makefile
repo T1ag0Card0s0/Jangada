@@ -22,6 +22,6 @@ clean:
 	rm $(OBJS)
 	rm $(TARGET)
 
-include $(RTOS_PATH)/make/rules.mk
+include $(COMPILE_RULES)
 
 -include $(DEPS)

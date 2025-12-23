@@ -12,7 +12,6 @@ CFLAGS := -MMD -MP $(INCLUDES)
 all: $(TARGET)
 
 install:
-	cp -r $(RTOS_PATH)/$(KERNEL_INCLUDE_DIR)/* $(PREFIX)/usr/include/kernel
 	cp -r $(TARGET) $(PREFIX)/usr/lib
 
 $(TARGET): $(OBJS)
@@ -23,6 +22,6 @@ $(TARGET): $(OBJS)
 clean:
 	rm -f $(OBJS)
 
-include $(RTOS_PATH)/make/rules.mk
+include $(COMPILE_RULES)
 
 -include $(DEPS)

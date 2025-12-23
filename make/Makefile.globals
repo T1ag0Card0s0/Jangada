@@ -8,3 +8,4 @@ export RTOS_BUILD_DIR
 export ARCH
 export BOARD
 export PREFIX
+export COMPILE_RULES = $(RTOS_PATH)/make/Makefile.rules

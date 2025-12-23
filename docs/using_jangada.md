@@ -8,7 +8,7 @@ BUILD_DIR := $(CURDIR)/build
 CFLAGS := --sysroot=$(BUILD_DIR)/sysroot -ffreestanding -nostdlib -nostartfiles -fno-builtin -ffunction-sections -fdata-sections
 LDFLAGS := --sysroot=$(BUILD_DIR)/sysroot -nostdlib -nostartfiles -ffreestanding
 
-LDFLAGS += -lc -ljangada -lbsp
+LDFLAGS += -lc -ljangada -larch
 
 SRCS := $(BUILD_DIR)/src/main.c.o
 

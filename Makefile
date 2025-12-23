@@ -1,6 +1,6 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 RTOS_PATH = $(patsubst %/,%,$(dir $(mkfile_path)))
-include $(RTOS_PATH)/make/helpers.mk
+include $(RTOS_PATH)/make/Makefile.helpers
 
 BUILD_DIR ?= $(CURDIR)/build
 PREFIX ?= $(BUILD_DIR)/sysroot
@@ -9,9 +9,9 @@ RTOS_BUILD_DIR = $(BUILD_DIR)/jangada
 REQUIRED_VARS := BUILD_DIR ARCH BOARD TRIPLET
 $(call check-required-vars,$(REQUIRED_VARS))
 
-include $(RTOS_PATH)/make/globals.mk
+include $(RTOS_PATH)/make/Makefile.globals
 
-RTOS_DIRS = $(RTOS_PATH)/bsps/$(ARCH) \
+RTOS_DIRS = $(RTOS_PATH)/arch/$(ARCH) \
 			$(RTOS_PATH)/libc \
 			$(RTOS_PATH)/kernel
 
@@ -24,6 +24,7 @@ sysroot:
 	mkdir -p $(PREFIX)/usr/{lib,include/{kernel,sys,bsp}}
 
 install: install-dirs
+	cp -r $(RTOS_PATH)/include/* $(PREFIX)/usr/include/
 
 clean: clean-dirs
 

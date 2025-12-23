@@ -1,52 +1,59 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-RTOS_PATH = $(patsubst %/,%,$(dir $(mkfile_path)))
-include $(RTOS_PATH)/make/helpers.mk
+export PROJECT_PATH := $(patsubst %/,%,$(dir $(mkfile_path)))
+include config/default.config
 
-BUILD_DIR ?= $(CURDIR)/build
-PREFIX ?= $(BUILD_DIR)/sysroot
-RTOS_BUILD_DIR = $(BUILD_DIR)/jangada
-
-REQUIRED_VARS := BUILD_DIR ARCH BOARD TRIPLET
+REQUIRED_VARS := TRIPLET ARCH
 $(call check-required-vars,$(REQUIRED_VARS))
 
-include $(RTOS_PATH)/make/globals.mk
+BUILD_DIR ?= build
+TARGET := $(BUILD_DIR)/jangada
+DIRS := arch/$(ARCH) kernel lib init drivers
+LIB_DIRS := lib
+NON_LIB_DIRS := $(filter-out $(LIB_DIRS),$(DIRS))
 
-RTOS_DIRS = $(RTOS_PATH)/bsps/$(ARCH) \
-			$(RTOS_PATH)/libc \
-			$(RTOS_PATH)/kernel
+LDSCRIPT := include/arch/$(ARCH)/linker.ld
+LDFLAGS := -T $(LDSCRIPT) -nostdlib -nostartfiles -ffreestanding -Wl,--gc-sections
 
-RTOS_INCLUDE_DIR := $(RTOS_PATH)/kernel/include \
-					$(RTOS_PATH)/libc/include
+rwildcard=$(foreach d,$(wildcard $(addsuffix *,$(1))),$(call rwildcard,$(d)/,$(2))$(filter $(subst *,%,$(2)),$(d)))
 
-all: build-dirs install
+default: show-info all
 
-sysroot:
-	mkdir -p $(PREFIX)/usr/{lib,include/{kernel,sys,bsp}}
+$(TARGET): build-subdirs find-all-objs find-all-libs
+	@echo -e "\t" LD $(LDFLAGS) $(ALL_OBJS) $(ALL_LIBS) -o $@
+	@$(CC) $(LDFLAGS) $(ALL_OBJS) $(ALL_LIBS) -o $@
 
-install: install-dirs
+all: $(TARGET)
+	@echo Target $(TARGET) build finished.
 
-clean: clean-dirs
+clean: clean-subdirs
+	@echo CLEAN 
+	@rm -f $(TARGET)
+	@rm -rf $(BUILD_DIR)
 
-format: format-dirs
+find-all-objs:
+	$(eval ALL_OBJS := $(call rwildcard,$(addprefix $(BUILD_DIR)/,$(NON_LIB_DIRS)),*.o))
 
-build-dirs: sysroot
-	for dir in $(RTOS_DIRS); do \
-		$(MAKE) -C $$dir all; \
-	done
+find-all-libs:
+	$(eval ALL_LIBS := $(call rwildcard,$(addprefix $(BUILD_DIR)/,$(LIB_DIRS)),*.a))
 
-clean-dirs:
-	for dir in $(RTOS_DIRS); do \
-		$(MAKE) -C $$dir clean; \
-	done
+show-info:
+	@echo Building Project
 
-install-dirs:
-	for dir in $(RTOS_DIRS); do \
-		$(MAKE) -C $$dir install; \
-	done
+install: all install-subdirs
+	mkdir -p $(SYSROOT)/boot
+	cp $(TARGET) $(SYSROOT)/boot/jangada.elf
+	
+.PHONY: all clean show-info find-all-objs find-all-libs install install-subdirs
 
-format-dirs:
-	for dir in $(RTOS_DIRS); do \
-		$(MAKE) -C $$dir format; \
-	done
+export BUILD_DIR := $(PROJECT_PATH)/$(BUILD_DIR)
+export MAKE_INCLUDE=$(PROJECT_PATH)/config/make.global
+export SUB_MAKE_INCLUDE=$(PROJECT_PATH)/config/submake.global
+export SYSROOT ?= $(BUILD_DIR)/sysroot
+export PREFIX  ?= /usr
+export INCLUDEDIR := $(PREFIX)/include
+export LIBDIR := $(PREFIX)/lib
+export BINDIR := $(PREFIX)/bin
 
-.PHONY: all clean test format
+include $(MAKE_INCLUDE)
+include $(PROJECT_PATH)/config/triplet.global
+include $(PROJECT_PATH)/config/helpers.global

@@ -1,1 +1,0 @@
-LINKER_SCRIPT := aarch64/qemu_virt/linker.ld

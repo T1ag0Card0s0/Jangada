@@ -60,16 +60,16 @@ static void pl011_tty_flush(void)
 
 /* PL011 TTY operations table */
 static const tty_ops_t pl011_tty_ops = {
-    .init = pl011_tty_init,
-    .deinit = pl011_tty_deinit,
-    .putc = pl011_tty_putc,
-    .getc = pl011_tty_getc,
-    .getc_nonblocking = pl011_tty_getc_nonblocking,
-    .write = pl011_tty_write,
-    .read = pl011_tty_read,
-    .tx_ready = pl011_tty_tx_ready,
-    .rx_available = pl011_tty_rx_available,
-    .flush = pl011_tty_flush,
+        .init = pl011_tty_init,
+        .deinit = pl011_tty_deinit,
+        .putc = pl011_tty_putc,
+        .getc = pl011_tty_getc,
+        .getc_nonblocking = pl011_tty_getc_nonblocking,
+        .write = pl011_tty_write,
+        .read = pl011_tty_read,
+        .tx_ready = pl011_tty_tx_ready,
+        .rx_available = pl011_tty_rx_available,
+        .flush = pl011_tty_flush,
 };
 
 /* Static TTY device instance */
@@ -77,19 +77,20 @@ static tty_device_t pl011_tty_device;
 
 /**
  * @brief Initialize PL011 as a TTY device
- * 
+ *
  * @param name Device name (e.g., "tty0", "console")
  * @param line_buffer_size Size of line buffer (0 to disable)
  * @return 0 on success, negative error code on failure
  */
 int tty_pl011_init(const char *name, size_t line_buffer_size)
 {
-    return tty_register(&pl011_tty_device, name, &pl011_tty_ops, line_buffer_size);
+    return tty_register(&pl011_tty_device, name, &pl011_tty_ops,
+                        line_buffer_size);
 }
 
 /**
  * @brief Get the PL011 TTY device
- * 
+ *
  * @return Pointer to TTY device
  */
 tty_device_t *tty_pl011_get(void)

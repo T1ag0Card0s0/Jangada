@@ -5,6 +5,10 @@ MAKEFLAGS += -s
 OBJCFLAGS := $(CFLAGS) -c
 OBJCXXFLAGS := $(CXXFLAGS) -c
 
+# code quality tools
+CLANG_FORMAT ?= clang-format
+CLANG_TIDY ?= clang-tidy
+
 # recursive make and clean
 .PHONY: build-subdirs
 build-subdirs: $(DIRS)
@@ -29,6 +33,10 @@ install-subdirs:
 
 $(BUILD_DIR)/%.c.o: $(PROJECT_PATH)/%.c
 	@mkdir -p $(dir $@)
+	@echo -e "\t" FORMAT $(patsubst $(PROJECT_PATH)/%,%,$<)
+	@$(CLANG_FORMAT) -i $<
+	@echo -e "\t" TIDY $(patsubst $(PROJECT_PATH)/%,%,$<)
+	@$(CLANG_TIDY) --fix --fix-errors $< -- $(INCLUDES) $(CFLAGS) 2>/dev/null || true
 	@echo -e "\t" CC $(OBJCFLAGS) $(patsubst $(PROJECT_PATH)/%,%,$<) -o $(patsubst $(BUILD_DIR)/%,%,$@)
 	@$(CC) $(OBJCFLAGS) $< -o $@
 

@@ -18,6 +18,7 @@ void start_kernel()
     tty_device_t *console = tty_pl011_get();
     tty_open(console);
     tty_puts(console, "Hello from TTY abstraction!\n");
-    
-    while(1);
+
+    while (1)
+        ;
 }

@@ -30,6 +30,26 @@ clean: clean-subdirs
 	@rm -f $(TARGET)
 	@rm -rf $(BUILD_DIR)
 
+format:
+	@echo Formatting all C/C++ source files...
+	@find . -type f \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) \
+		! -path './build/*' -exec clang-format -i {} \;
+	@echo Format complete.
+
+tidy:
+	@echo Running clang-tidy static analysis...
+	@find . -type f \( -name '*.c' -o -name '*.cpp' \) \
+		! -path './build/*' \
+		-exec clang-tidy --fix --fix-errors {} -- $(INCLUDES) $(CFLAGS) \; 2>/dev/null || true
+	@echo Tidy analysis complete.
+
+tidy-check:
+	@echo Running clang-tidy static analysis - read-only mode...
+	@find . -type f \( -name '*.c' -o -name '*.cpp' \) \
+		! -path './build/*' \
+		-exec clang-tidy {} -- $(INCLUDES) $(CFLAGS) \;
+	@echo Tidy analysis complete.
+
 find-all-objs:
 	$(eval ALL_OBJS := $(call rwildcard,$(addprefix $(BUILD_DIR)/,$(NON_LIB_DIRS)),*.o))
 
@@ -43,7 +63,7 @@ install: all install-subdirs
 	mkdir -p $(SYSROOT)/boot
 	cp $(TARGET) $(SYSROOT)/boot/jangada.elf
 	
-.PHONY: all clean show-info find-all-objs find-all-libs install install-subdirs
+.PHONY: all clean show-info find-all-objs find-all-libs install install-subdirs format tidy tidy-check
 
 export BUILD_DIR := $(PROJECT_PATH)/$(BUILD_DIR)
 export MAKE_INCLUDE=$(PROJECT_PATH)/config/make.global

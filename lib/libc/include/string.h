@@ -3,6 +3,6 @@
 
 #include <stddef.h>
 
-void* memcpy(void* __restrict, const void* __restrict, size_t);
+void *memcpy(void *__restrict, const void *__restrict, size_t);
 
 #endif // STRING_H

@@ -1,6 +1,7 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 export PROJECT_PATH := $(patsubst %/,%,$(dir $(mkfile_path)))
 include config/default.config
+include config/run.global
 
 REQUIRED_VARS := TRIPLET ARCH
 $(call check-required-vars,$(REQUIRED_VARS))
@@ -62,7 +63,10 @@ show-info:
 install: all install-subdirs
 	mkdir -p $(SYSROOT)/boot
 	cp $(TARGET) $(SYSROOT)/boot/jangada.elf
-	
+
+run: all 
+	$(RUN_$(ARCH)_$(BOARD))
+
 .PHONY: all clean show-info find-all-objs find-all-libs install install-subdirs format tidy tidy-check
 
 export BUILD_DIR := $(PROJECT_PATH)/$(BUILD_DIR)

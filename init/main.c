@@ -20,5 +20,7 @@ void start_kernel()
     tty_puts(console, "Hello from TTY abstraction!\n");
 
     while (1)
+    {
         ;
+    }
 }

@@ -6,8 +6,10 @@ OBJS := $(SRCS_WITH_PATH:%=$(BUILD_DIR)/%.o)
 all: $(OBJS) build-subdirs
 
 clean: clean-subdirs
-	@echo CLEAN $(OBJS)
-	@rm -f $(OBJS)
+	@if [ -n "$(OBJS)" ] && ls $(OBJS) 2>/dev/null | grep -q .; then \
+		echo "CLEAN $(RELATIVE_DIR): $(notdir $(OBJS))"; \
+		rm -f $(OBJS); \
+	fi
 
 .PHONY: all clean
 

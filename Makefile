@@ -27,9 +27,11 @@ all: $(TARGET)
 	@echo Target $(TARGET) build finished.
 
 clean: clean-subdirs
-	@echo CLEAN 
-	@rm -f $(TARGET)
-	@rm -rf $(BUILD_DIR)
+	@if [ -f "$(TARGET)" ] || [ -d "$(BUILD_DIR)" ]; then \
+		echo "CLEAN $(TARGET) $(BUILD_DIR)"; \
+		rm -f $(TARGET); \
+		rm -rf $(BUILD_DIR); \
+	fi
 
 format:
 	@echo Formatting all C/C++ source files...

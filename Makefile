@@ -14,7 +14,7 @@ NON_LIB_DIRS := $(filter-out $(LIB_DIRS),$(DIRS))
 
 LDSCRIPT := include/arch/$(ARCH)/linker.ld
 LDFLAGS := -T $(LDSCRIPT) -nostdlib -nostartfiles -ffreestanding -Wl,--gc-sections
-
+export CFLAGS = -ffreestanding -I$(PROJECT_PATH)/lib/libc/include
 rwildcard=$(foreach d,$(wildcard $(addsuffix *,$(1))),$(call rwildcard,$(d)/,$(2))$(filter $(subst *,%,$(2)),$(d)))
 
 default: show-info all
@@ -33,24 +33,10 @@ clean: clean-subdirs
 		rm -rf $(BUILD_DIR); \
 	fi
 
-format:
-	@echo Formatting all C/C++ source files...
-	@find . -type f \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) \
-		! -path './build/*' -exec clang-format -i {} \;
+format: format-subdirs
 	@echo Format complete.
 
-tidy:
-	@echo Running clang-tidy static analysis...
-	@find . -type f \( -name '*.c' -o -name '*.cpp' \) \
-		! -path './build/*' \
-		-exec clang-tidy --fix --fix-errors {} -- $(INCLUDES) $(CFLAGS) \; 2>/dev/null || true
-	@echo Tidy analysis complete.
-
-tidy-check:
-	@echo Running clang-tidy static analysis - read-only mode...
-	@find . -type f \( -name '*.c' -o -name '*.cpp' \) \
-		! -path './build/*' \
-		-exec clang-tidy {} -- $(INCLUDES) $(CFLAGS) \;
+tidy: tidy-subdirs
 	@echo Tidy analysis complete.
 
 find-all-objs:

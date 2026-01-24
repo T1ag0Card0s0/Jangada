@@ -23,6 +23,18 @@ clean-subdirs:
 		$(MAKE) -C $$dir clean; \
 	done
 
+.PHONY: format-subdirs
+format-subdirs:
+	@for dir in $(DIRS); do \
+		$(MAKE) -C $$dir format; \
+	done
+
+.PHONY: tidy-subdirs
+tidy-subdirs:
+	@for dir in $(DIRS); do \
+		$(MAKE) -C $$dir tidy; \
+	done
+
 .PHONY: install-subdirs install
 install-subdirs:
 	@for dir in $(DIRS); do \

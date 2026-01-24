@@ -1,1 +1,1 @@
-RUN_aarch64_qemu_virt = qemu-system-aarch64 -machine virt -cpu cortex-a53 -m 128M -kernel build/jangada
+RUN_aarch64_qemu_virt = qemu-system-aarch64 -machine virt -cpu cortex-a53 -m 128M -kernel build/jangada -nographic

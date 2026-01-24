@@ -11,6 +11,24 @@ clean: clean-subdirs
 		rm -f $(OBJS); \
 	fi
 
-.PHONY: all clean
+format: format-subdirs
+	@for src in $(SRCS_WITH_PATH); do \
+		case $$src in \
+			*.S) ;; \
+			*) echo -e "\t" FORMAT $$src; \
+			   $(CLANG_FORMAT) -i $(PROJECT_PATH)/$$src ;; \
+		esac; \
+	done
+
+tidy: tidy-subdirs
+	@for src in $(SRCS_WITH_PATH); do \
+		case $$src in \
+			*.S) ;; \
+			*) echo -e "\t" TIDY $$src; \
+			   $(CLANG_TIDY) --fix --fix-errors $(PROJECT_PATH)/$$src -- $(INCLUDES) $(CFLAGS) 2>/dev/null || true ;; \
+		esac; \
+	done
+
+.PHONY: all clean format tidy
 
 include $(MAKE_INCLUDE)

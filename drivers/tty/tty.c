@@ -3,8 +3,11 @@
  * @brief TTY abstraction layer implementation
  */
 
-#include "drivers/tty.h"
+#include "drivers/tty/tty.h"
+#include "stdbool.h"
+#include "stddef.h"
 #include <stdarg.h>
+#include <stdint.h>
 #include <string.h>
 
 /* Configuration */
@@ -42,6 +45,7 @@ static inline void tty_unlock(tty_device_t *tty)
 static void *tty_malloc(size_t size)
 {
     /** TODO: provide kmalloc */
+    (void)size;
     return NULL;
 }
 
@@ -169,7 +173,7 @@ int tty_open(tty_device_t *tty)
     return tty->ops->init();
 }
 
-void tty_close(tty_device_t *tty)
+void tty_close(const tty_device_t *tty)
 {
     if (!tty || !tty->ops)
     {

@@ -4,7 +4,9 @@
  */
 
 #include "pl011.h"
+#include "stdbool.h"
 #include <stddef.h>
+#include <stdint.h>
 
 /* PL011 Register Offsets */
 #define UART_DR 0x00    /* Data Register */
@@ -168,12 +170,6 @@ void pl011_uart_deinit(void)
 
 void pl011_uart_putc(char c)
 {
-    /* Handle newline conversion */
-    if (c == '\n')
-    {
-        pl011_uart_putc('\r');
-    }
-
     /* Wait until TX FIFO has space */
     while (mmio_read(UART_REG(UART_FR)) & FR_TXFF)
     {

@@ -3,8 +3,8 @@
  * @brief Glue code to connect PL011 UART driver to TTY layer
  */
 
+#include "drivers/tty/tty_pl011.h"
 #include "pl011.h"
-#include "tty_pl011.h"
 
 /* PL011 operations wrapper functions */
 

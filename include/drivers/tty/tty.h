@@ -118,7 +118,7 @@ int tty_open(tty_device_t *tty);
  *
  * @param tty Pointer to TTY device
  */
-void tty_close(tty_device_t *tty);
+void tty_close(const tty_device_t *tty);
 
 /**
  * @brief Write a character to TTY

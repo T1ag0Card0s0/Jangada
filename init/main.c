@@ -1,9 +1,5 @@
-#include "drivers/tty.h"
-#include "pl011.h"
-
-/* Declare glue functions */
-extern int tty_pl011_init(const char *name, size_t line_buffer_size);
-extern tty_device_t *tty_pl011_get(void);
+#include "drivers/tty/tty.h"
+#include "drivers/tty/tty_pl011.h"
 
 void start_kernel()
 {
@@ -11,8 +7,8 @@ void start_kernel()
     tty_init();
 
     /* Register PL011 UART as a TTY device */
-    /* Line buffer size of 256 bytes enables canonical mode */
-    tty_pl011_init("console", 256);
+    /* Line buffer disabled (0) since kmalloc not yet implemented */
+    tty_pl011_init("console", 0);
 
     /* Open the TTY device (initializes hardware) */
     tty_device_t *console = tty_pl011_get();

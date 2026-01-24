@@ -1,7 +1,7 @@
 #ifndef TTY_PL011_H
 #define TTY_PL011_H
 
-#include "drivers/tty.h"
+#include "tty.h"
 #include <stddef.h>
 
 /* Declare glue functions */

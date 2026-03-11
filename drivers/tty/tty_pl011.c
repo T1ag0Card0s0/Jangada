@@ -4,7 +4,7 @@
  */
 
 #include "drivers/tty/tty_pl011.h"
-#include "pl011.h"
+#include "uart/pl011.h"
 
 /* PL011 operations wrapper functions */
 

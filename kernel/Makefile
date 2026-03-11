@@ -1,4 +1,0 @@
-SRCS := task.c
-DIRS := 
-
-include $(SUB_MAKE_INCLUDE)

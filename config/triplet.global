@@ -1,5 +1,0 @@
-export CC = $(TRIPLET)gcc
-export AS = $(TRIPLET)as
-export CXX = $(TRIPLET)g++
-export LD = $(TRIPLET)ld
-export AR = $(TRIPLET)ar

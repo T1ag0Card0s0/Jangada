@@ -51,6 +51,7 @@ static void *tty_malloc(size_t size)
 
 static void tty_free(void *ptr)
 {
+  (void) ptr;
     /* TODO: kfree */
 }
 

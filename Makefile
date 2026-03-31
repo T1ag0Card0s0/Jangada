@@ -3,6 +3,11 @@
 PROJECT := jangada
 VERSION := 0.1.0
 
+SUPPORTED_ARCHS := armv7a i386
+SUPPORTED_BOARDS := qemu_virt
+SUPPORTED_MCUS_armv7a := cortex-a15
+SUPPORTED_MCUS_i386 := pc_i386
+
 BUILD_DIR := build
 OBJ_DIR := $(BUILD_DIR)/obj
 BIN_DIR := $(BUILD_DIR)/bin
@@ -19,9 +24,6 @@ AR := $(TRIPLET)ar
 LD := $(TRIPLET)ld
 OBJCOPY := $(TRIPLET)objcopy
 OBJDUMP := $(TRIPLET)objdump
-SIZE := $(TRIPLET)size
-NM := $(TRIPLET)nm
-GDB := $(TRIPLET)gdb
 QEMU := qemu-system-arm
 
 CPUFLAGS := -mcpu=$(MCU)
@@ -59,7 +61,9 @@ INCLUDES := \
     -Iarch/$(ARCH) \
     -Iconfig
 
-MODULE_MKS := $(shell find . -name "module.mk" -not -path "$(BUILD_DIR)/*" -not -path "./.git/*" | sort)
+MODULE_MKS := $(shell find . -name "module.mk" \
+    -not -path "$(BUILD_DIR)/*" \
+    -not -path "./.git/*" | sort)
 
 SRCS :=
 OBJS :=
@@ -72,7 +76,7 @@ endif
 
 include $(MODULE_MKS)
 
-C_SRCS    := $(filter %.c,$(SRCS))
+C_SRCS := $(filter %.c,$(SRCS))
 AS_SRCS_s := $(filter %.s,$(SRCS))
 AS_SRCS_S := $(filter %.S,$(SRCS))
 
@@ -83,7 +87,7 @@ OBJS += $(patsubst %.S,$(OBJ_DIR)/%.o,$(AS_SRCS_S))
 DEPS += $(OBJS:.o=.d)
 
 ifeq ($(strip $(OBJS)),)
-  $(error OBJS is empty — no sources were collected from module.mk files. Run: find . -name "module.mk" -not -path "./build/*")
+  $(error OBJS is empty — no sources were collected from module.mk files)
 endif
 
 ELF := $(BIN_DIR)/$(PROJECT).elf
@@ -91,8 +95,9 @@ BIN := $(BIN_DIR)/$(PROJECT).bin
 HEX := $(BIN_DIR)/$(PROJECT).hex
 LST := $(BIN_DIR)/$(PROJECT).lst
 
-.PHONY: all
-all: $(ELF) $(BIN) $(HEX) $(LST) size
+.PHONY: all clean run help
+
+all: $(ELF) $(BIN) $(HEX) $(LST)
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -126,88 +131,39 @@ $(LST): $(ELF)
 	@echo "  LST     $@"
 	@$(OBJDUMP) -h -S $< > $@
 
-.PHONY: size
-size: $(ELF)
-	@echo ""
-	@echo "====== Memory Usage ======"
-	@$(SIZE) --format=berkeley $(ELF)
-	@echo "=========================="
-
-.PHONY: symbols
-symbols: $(ELF)
-	@$(NM) --print-size --size-sort --radix=d $(ELF)
-
-.PHONY: disasm
-disasm: $(ELF)
-	@$(OBJDUMP) -d -S $(ELF) | less
-
-.PHONY: run
 run: $(ELF)
 	$(QEMU) -M virt -cpu $(MCU) -kernel $(ELF) -nographic
 
-.PHONY: debug
-debug: $(ELF)
-	$(QEMU) -M virt -cpu $(MCU) -kernel $(ELF) \
-	        -S -gdb tcp::1234 -nographic
-
-.PHONY: gdb
-gdb: $(ELF)
-	$(GDB) -tui $(ELF) \
-	       -ex "target remote :1234" \
-	       -ex "break reset_handler" \
-	       -ex "continue"
-
-.PHONY: clean
 clean:
 	@echo "  CLEAN"
 	@rm -rf $(BUILD_DIR)
 
-.PHONY: distclean
-distclean: clean
-	@rm -f tags cscope.*
-
-.PHONY: info
-info:
-	@echo ""
-	@echo "=== Module files found by find ==="
-	@for m in $(MODULE_MKS); do echo "  $$m"; done
-	@echo ""
-	@echo "=== Raw SRCS accumulator ==="
-	@for s in $(SRCS); do echo "  $$s"; done
-	@echo ""
-	@echo "=== C sources ==="
-	@for s in $(C_SRCS); do echo "  $$s"; done
-	@echo ""
-	@echo "=== ASM sources (.s) ==="
-	@for s in $(AS_SRCS_s); do echo "  $$s"; done
-	@echo ""
-	@echo "=== ASM sources (.S) ==="
-	@for s in $(AS_SRCS_S); do echo "  $$s"; done
-	@echo ""
-	@echo "=== Object files ==="
-	@for o in $(OBJS); do echo "  $$o"; done
-	@echo ""
-	@echo "=== Static libraries ==="
-	@for l in $(LIBS); do echo "  $$l"; done
-	@echo ""
-
-.PHONY: help
 help:
 	@echo ""
 	@echo "Jangada Build System"
-	@echo "--------------------"
-	@echo "  make               Build all"
-	@echo "  make run           Run in QEMU"
-	@echo "  make debug         Run QEMU waiting for GDB on :1234"
-	@echo "  make gdb           Connect GDB to QEMU"
-	@echo "  make info          Show discovered modules, sources, objects"
-	@echo "  make size          Memory usage"
-	@echo "  make symbols       Symbol table by size"
-	@echo "  make disasm        Disassemble ELF"
-	@echo "  make clean         Remove build/"
-	@echo "  make distclean     Remove build/ + tags"
+	@echo "===================="
 	@echo ""
-	@echo "  ARCH=$(ARCH)   MCU=$(MCU)   BOARD=$(BOARD)"
+	@echo "Targets:"
+	@echo "  make all    Build ELF, BIN, HEX and LST"
+	@echo "  make clean  Remove build artifacts"
+	@echo "  make run    Run in QEMU"
+	@echo "  make help   Show this help"
+	@echo ""
+	@echo "Current configuration:"
+	@echo "  ARCH   = $(ARCH)"
+	@echo "  MCU    = $(MCU)"
+	@echo "  BOARD  = $(BOARD)"
+	@echo "  TRIPLET= $(TRIPLET)"
+	@echo ""
+	@echo "Supported architectures:"
+	@echo "  $(SUPPORTED_ARCHS)"
+	@echo ""
+	@echo "Supported boards:"
+	@echo "  $(SUPPORTED_BOARDS)"
+	@echo ""
+	@echo "Supported MCUs by architecture:"
+	@echo "  armv7a : $(SUPPORTED_MCUS_armv7a)"
+	@echo "  i386   : $(SUPPORTED_MCUS_i386)"
 	@echo ""
 
 -include $(DEPS)

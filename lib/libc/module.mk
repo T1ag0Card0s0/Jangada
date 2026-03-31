@@ -1,7 +1,17 @@
 LIBC_DIR := lib/libc
 LIBC_ARCHIVE := $(BUILD_DIR)/lib/libc/libc.a
 
-LIBC_SRCS := $(LIBC_DIR)/string/memcpy.c $(LIBC_DIR)/string/memset.c $(LIBC_DIR)/string/strcmp.c
+LIBC_SRCS :=  $(LIBC_DIR)/string/memcmp.c \
+							$(LIBC_DIR)/string/memcpy.c \
+							$(LIBC_DIR)/string/memmove.c \
+							$(LIBC_DIR)/string/memset.c \
+							$(LIBC_DIR)/string/strlen.c \
+							$(LIBC_DIR)/stdio/printf.c \
+							$(LIBC_DIR)/stdio/putchar.c \
+							$(LIBC_DIR)/stdio/puts.c \
+							$(LIBC_DIR)/stdlib/abort.c	
+
+
 LIBC_OBJS := $(patsubst %.c, $(OBJ_DIR)/%.o, $(LIBC_SRCS))
 
 LIBS += $(LIBC_ARCHIVE)
